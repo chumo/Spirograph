@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding"> -->
+  <meta charset="UTF-8">
+  <meta name="description" content="Play around with composed harmonics">
+  <meta name="keywords" content="d3, d3.js, visualization, dynamic systems">
+  <meta name="author" content="Jesús Martínez-Blanco">
+
+  <title>Spirograph</title>
+  <!--<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />-->
+  <link href="chumo.css" rel="stylesheet">
+  <!--<script src="http://d3js.org/d3.v3.js"></script> -->
+  <script src="d3/d3.min.js"></script>
+</head>
+
+<body style='text-align:center'>
+	<!-- Go to www.addthis.com/dashboard to customize your tools -->
+	<!-- <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-55a3a9ab5aac0b42" async="async"></script> -->
+
+	<div id='header'>
+		<!--<h1>Harmonograph</h1>-->
+		<h1>Spirograph</h1>
+		<p>The path of multiple coupled harmonics</p>
+		<nav>
+
+		</nav>
+	</div>
+
+	<p id='author'><a href='https://github.com/chumo/Spirograph'>chumo &copy 2015</a></p>
+
+	<div id='container'>
+		<svg id='svg' width="700" height="700">
+
+		</svg>
+		<canvas id="canvas" width="700" height="700" style="border: 3px solid #cccccc;">
+    		HTML5 Canvas not supported
+		</canvas>
+	</div>
+
+
+	<script type = "text/javascript">
+
+	var f1 = 13;
+	var f2 = 32.5;
+	var f3 = 2;
+
+	var L1 = 100;
+	var L2 = 50;
+	var L3 = 150;
+
+	var svg = d3.select('#svg');
+
+	var canvas  = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+        context.beginPath();
+        context.moveTo(350,350+L1+L2+L3);
+
+	var uno = svg.append('g').attr('id','uno');
+
+	var dos = uno.append('g').attr('id','dos');
+
+	var tres = dos.append('g').attr('id','tres');
+
+	uno.append('line')
+		.attr('class','stick')
+		.attr('x1',0)
+		.attr('x2',0)
+		.attr('y1',0)
+		.attr('y2',L1);
+
+	dos.append('line')
+		.attr('class','stick')
+		.attr('x1',0)
+		.attr('x2',0)
+		.attr('y1',0)
+		.attr('y2',L2);
+
+	tres.append('line')
+		.attr('class','stick')
+		.attr('x1',0)
+		.attr('x2',0)
+		.attr('y1',0)
+		.attr('y2',L3);
+
+	tres.append('circle')
+		.attr('cx',0)
+		.attr('cy',L3)
+		.attr('r',1)
+		.attr('id','tip');
+
+	d3.timer(function(t){
+		//uno.attr('transform','translate(350,350)rotate('+(20*Math.sin(t/200))+')');
+		uno.attr('transform','translate(350,350)rotate('+(t/f1)+')');
+		dos.attr('transform','translate(0,'+L1+')rotate('+(70*Math.sin(t/330))+')');
+		//dos.attr('transform','translate(0,'+L1+')rotate('+(t/f2)+')');
+		//tres.attr('transform','translate(0,'+L2+')rotate('+(t/f3)+')');
+		tres.attr('transform','translate(0,'+L2+')rotate('+(70*Math.sin(t/330))+')');
+
+		//if (t % 100 < 10) {
+			var rectSvg = document.getElementById('svg').getBoundingClientRect();
+        	var rectElement = document.getElementById('tip').getBoundingClientRect();
+        	var cx = rectElement.left - rectSvg.left;// + rectElement.width/2;
+        	var cy = rectElement.top - rectSvg.top;// + rectElement.height/2;
+
+			svg.append("circle")
+				.attr('class','circle')
+	      		.attr("cx", cx)
+	      		.attr("cy", cy)
+	      		.attr("r", 1)
+	      		.style('fill','red')
+	      		.style("stroke", 'red')
+	      		.style("stroke-opacity", 1)
+	    	.transition()
+	      		.duration(1000)
+	      		.ease(Math.sqrt)
+	      		.attr("r", 20)
+	      		.style('fill','blue')
+	      		.style("opacity", 1e-6)
+	      		.style("stroke-opacity", 1e-6)
+	      		.remove();
+
+	      	context.lineTo(cx,cy);
+	      	context.stroke();
+		//};
+	});
+
+	</script>
+
+
+</body>
+
+</html>
